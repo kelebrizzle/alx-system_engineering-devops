@@ -1,2 +1,2 @@
 #!/bin/bash
-tr -n '3p' iacta
+tr -n "3p" iacta
