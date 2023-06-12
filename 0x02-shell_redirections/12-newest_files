@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -lt | grep -v '^d' | tail -n 10 | cut -d ' ' -f 9-
+ls -l | grep -v '^d' | tail -n 10 | cut -d ' ' -f 9-
