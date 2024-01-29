@@ -1,51 +1,33 @@
 #!/usr/bin/python3
-"""This script makes a request to a REST API"""
-
+"""
+Using https://jsonplaceholder.typicode.com
+returns info about employee TODO progress
+Implemented using recursion
+"""
+import re
 import requests
 import sys
 
 
-if __name__ == "__main__":
-    id = sys.argv[1]
-    base_url = "https://jsonplaceholder.typicode.com"
-    user_data = requests.get("{}/users/{}".format(base_url, id)).json()
-    todo_data = requests.get("{}/users/{}/todos".format(base_url, id)).json()
-
-    name = user_data.get('name')
-    task_length = len(todo_data)
-    completed_tasks = []
-
-    for value in todo_data:
-        if value.get('completed'):
-            completed_tasks.append(value.get('title'))
-
-    print("Employee {} is done with tasks({}/{}):"
-          .format(name, len(completed_tasks), len(todo_data)))
-
-    for value in completed_tasks:
-        print("\t {}".format(value))#!/usr/bin/python3
-"""This script makes a request to a REST API"""
-
-import requests
-import sys
+API = "https://jsonplaceholder.typicode.com"
+"""REST API url"""
 
 
-if __name__ == "__main__":
-    id = sys.argv[1]
-    base_url = "https://jsonplaceholder.typicode.com"
-    user_data = requests.get("{}/users/{}".format(base_url, id)).json()
-    todo_data = requests.get("{}/users/{}/todos".format(base_url, id)).json()
-
-    name = user_data.get('name')
-    task_length = len(todo_data)
-    completed_tasks = []
-
-    for value in todo_data:
-        if value.get('completed'):
-            completed_tasks.append(value.get('title'))
-
-    print("Employee {} is done with tasks({}/{}):"
-          .format(name, len(completed_tasks), len(todo_data)))
-
-    for value in completed_tasks:
-        print("\t {}".format(value))
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        if re.fullmatch(r'\d+', sys.argv[1]):
+            id = int(sys.argv[1])
+            user_res = requests.get('{}/users/{}'.format(API, id)).json()
+            todos_res = requests.get('{}/todos'.format(API)).json()
+            user_name = user_res.get('name')
+            todos = list(filter(lambda x: x.get('userId') == id, todos_res))
+            todos_done = list(filter(lambda x: x.get('completed'), todos))
+            print(
+                'Employee {} is done with tasks({}/{}):'.format(
+                    user_name,
+                    len(todos_done),
+                    len(todos)
+                )
+            )
+            for todo_done in todos_done:
+                print('\t {}'.format(todo_done.get('title')))
